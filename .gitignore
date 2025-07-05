@@ -1,0 +1,61 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# --- Environment / Dependency ---
+.env
+.venv/
+venv/
+env/
+ENV/
+
+# --- Jupyter Notebooks ---
+.ipynb_checkpoints
+
+# --- FastAPI / Uvicorn ---
+*.log
+*.pid
+
+# --- Data folders ---
+data/documents/
+data/parsed_chunks/
+db/flashcard_db.json
+db/*.sqlite3
+*.db
+
+# --- ChromaDB (local vector DB) ---
+chroma/
+chroma_db/
+*.duckdb
+*.parquet
+
+# --- Celery / Task Queue ---
+celerybeat-schedule
+*.pid
+
+# --- Coverage / Testing ---
+htmlcov/
+coverage.xml
+.cache/
+.tox/
+.pytest_cache/
+nosetests.xml
+test-results/
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.swp
+*~
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
