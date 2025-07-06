@@ -1,0 +1,3 @@
+disable=
+    broad-except,
+    logging-fstring-interpolation

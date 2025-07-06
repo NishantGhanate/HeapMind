@@ -44,8 +44,8 @@ async def upload_doc(
 
         # Step 2: Persist file metadata to DB
         file_record = FileModel(
-            filename=file.filename,
-            filepath=str(save_path)
+            file_name=file.filename,
+            file_path=str(save_path)
         )
         session.add(file_record)
         await session.commit()
@@ -56,7 +56,7 @@ async def upload_doc(
             event_type="document_ingested",
             payload=json.dumps({
                 "file_id": str(file_record.id),
-                "path": file_record.path
+                "path": file_record.file_path
             }),
             processed=False
         )

@@ -34,6 +34,3 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
             yield session
     except Exception as e :
         raise
-
-    finally :
-        session.close()

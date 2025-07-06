@@ -23,9 +23,11 @@ class SettingsConfig(NamedTuple) :
     VERSION: str
     DESCRIPTION: str
     CONTACT: List[dict]
-    RABBIT_URL: Optional[str]
+    REDIS_URL: str
+    RABBIT_URL: str
     TIMEZONE: Optional[str]
     LOGGER_NAME: str = 'heap_mind'
+
 
     @property
     def tzinfo(self):
@@ -37,13 +39,14 @@ class SettingsConfig(NamedTuple) :
 
 settings_config = {
     'DB_URL' : f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
-    'TITLE' : 'OCruxCards',
+    'TITLE' : 'HeapMind',
     'VERSION' :'0.0.1',
     'DESCRIPTION' : '',
     'CONTACT' : [{
         'name' : 'Nishant',
         'email' : 'nishant7.ng@gmail.com',
     }],
+    "REDIS_URL": os.getenv('REDIS_URL'),
     'RABBIT_URL': os.getenv('RABBIT_URL'),
     'TIMEZONE': os.getenv('TIMEZONE')
 }

@@ -38,7 +38,26 @@ URL: http://localhost:15672
 User: guest
 Pass: guest
 ```
+Run Redis
 
+> docker run -d --name redis -p 6379:6379 redis:7-alpine
+
+Celery worker
+> celery -A app.core.celery_app worker --loglevel=info
+
+on windows
+> celery -A app.core.celery_app worker --loglevel=info --pool=solo
+
+
+Celery monitor via flower [pip install flower] [http://localhost:5555]
+> celery -A app.core.celery_app flower --broker=amqp://guest:guest@localhost:5672//
+
+Or use docker for flower
+
+> docker run -d -p 5555:5555 \
+    --name=flower \
+    -e CELERY_BROKER_URL=redis://host.docker.internal:6379/0 \
+    mher/flower
 
 TIPS:
 - Register your models into migrations/env.py
