@@ -1,8 +1,15 @@
-# app/core/startup.py
+""""
+Event based functions
+"""
+from app.core.dispatcher import start_dispatcher
+from app.db.session import init_db
+
 
 async def startup_events():
-    print("[Startup] Initializing vector DB, LLM, etc.")
     # e.g., chroma_client.init(), db.connect(), etc.
+    print("[Startup] Initializing vector DB, LLM, etc.")
+    await init_db()
+    await start_dispatcher()
 
 async def shutdown_events():
     print("[Shutdown] Cleaning up.")
