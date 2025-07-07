@@ -25,6 +25,7 @@ ENV/
 *.pid
 
 # --- Data folders ---
+wip/
 data/documents/
 data/parsed_chunks/
 db/flashcard_db.json
@@ -32,6 +33,7 @@ db/*.sqlite3
 *.db
 
 # --- ChromaDB (local vector DB) ---
+qdrant_storage/
 chroma/
 chroma_db/
 *.duckdb
