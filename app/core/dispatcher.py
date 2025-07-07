@@ -35,7 +35,8 @@ async def outbox_dispatcher(session_factory):
 
             for event in events:
                 try:
-                    # await safe_send(event)
+                    # based on eevent creata map to route
+                    # event_type="document_ingested"
                     payload = json.loads(event.payload)
                     process_document.delay(
                         event.id, payload, event.event_type

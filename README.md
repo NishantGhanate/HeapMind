@@ -59,6 +59,21 @@ Or use docker for flower
     -e CELERY_BROKER_URL=redis://host.docker.internal:6379/0 \
     mher/flower
 
+Run duadradb
+
+Linux:
+> docker run -p 6333:6333 -p 6334:6334 -v $(pwd)/qdrant_storage:/qdrant/storage qdrant/qdrant
+
+Windows:
+> docker run -p 6333:6333 -p 6334:6334 -v D:\Github\FlashCards\qdrant_storage:/qdrant/storage qdrant/qdrant
+
+
+Link
+> http://localhost:6333/dashboard#/welcome
+
+
+
+
 TIPS:
 - Register your models into migrations/env.py
 - Import SQl model into script.py.mako

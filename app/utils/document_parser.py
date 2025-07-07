@@ -3,6 +3,8 @@
 from pathlib import Path
 from typing import List
 
+import pdfplumber
+
 
 class DocumentParser:
     """
@@ -11,6 +13,8 @@ class DocumentParser:
 
     @staticmethod
     def parse_document(file_path: Path) -> List[str]:
+        if not isinstance(file_path, Path):
+            file_path = Path(file_path)
         ext = file_path.suffix.lower()
         if ext == ".pdf":
             return DocumentParser._parse_pdf(file_path)
@@ -21,9 +25,30 @@ class DocumentParser:
 
     @staticmethod
     def _parse_pdf(file_path: Path) -> List[str]:
-        # TODO: Implement actual PDF parsing here
+        """
+        Parse a PDF file and return a list of text chunks (by page).
+        Each item in the list represents the text content of one page.
+        """
         print(f"Parsing PDF: {file_path}")
-        return []
+        paragraphs = []
+        if not file_path.exists():
+            raise FileNotFoundError(f"File not found: {file_path}")
+
+        try:
+            with pdfplumber.open(file_path) as pdf:
+                for i, page in enumerate(pdf.pages):
+                    text = page.extract_text()
+                    if text:
+                        cleaned_text = text.strip()
+                        if cleaned_text:
+                            paragraphs.append(cleaned_text)
+                    else:
+                        print(f"[WARN] Page {i+1} has no extractable text.")
+        except Exception as e:
+            print(f"[ERROR] Failed to parse PDF: {e}")
+            raise
+
+        return paragraphs
 
     @staticmethod
     def _parse_docx(file_path: Path) -> List[str]:

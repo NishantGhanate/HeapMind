@@ -11,7 +11,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.db.session import get_db
 from app.models import FileModel, OutboxEventModel
-from utils.files import get_save_path
+from app.utils.files import get_save_path
 
 
 router = APIRouter()
@@ -56,7 +56,7 @@ async def upload_doc(
             event_type="document_ingested",
             payload=json.dumps({
                 "file_id": str(file_record.id),
-                "path": file_record.file_path
+                "file_path": file_record.file_path
             }),
             processed=False
         )
