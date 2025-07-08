@@ -5,7 +5,8 @@ from pathlib import Path
 
 
 # Base configurations
-LOG_PATH = Path("../logs")  # Replace with your actual log directory
+LOG_PATH = Path(__file__).resolve().parent.parent / "logs"
+
 LOG_PATH.mkdir(parents=True, exist_ok=True)  # Ensure the log directory exists
 
 # Logger configuration

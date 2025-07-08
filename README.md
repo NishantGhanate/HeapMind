@@ -1,79 +1,46 @@
-fastapi dev main.py
+Here's a quick summary the project:
+## 🧠 **Building an LLM-powered flashcard/quiz app**:
 
-uvicorn main:app --reload
+#### ✅ **Ingestion Flow**
 
+* Users upload documents (PDFs, DOCX, etc.).
+* It save file metadata in a database and file on file-system.
+* Use the **Outbox Pattern** with **Celery + RabbitMQ** to decouple and asynchronously process uploaded documents.
 
-Features
-- Reliable service event stream
+#### ✅ **Processing Flow**
 
+* A background worker:
+  * Parses the document (extracts text).
+  * Converts content to embeddings (using an LLM + embedding model).
+  * Stores embeddings into **Qdrant** (for vector search).
 
-### Create .env file
-```
-# postgres
-DB_USER=postgres
-DB_PASS=passowrd
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=heap_mind
+#### ✅ **Query Flow**
 
-# Rabbit broker
-RABBIT_URL="amqp://guest:guest@localhost/"
-```
+* A user asks a question or “generate 10 quiz questions from this doc”.
+* server:
+  * Perform semantic search in Qdrant to retrieve relevant chunks.
+  * Feed them into an LLM (like phi3) with a prompt to **generate quiz questions**.
+  * Returns list of json data.
+  * Validate the data & store in Postgres.
+  * Query postgres to the data based on sm2.
+  * Using api generate flashcards/quiz content.
 
-Create almebic migrations init [if no migrations exists]
-> alembic init -t async migrations
+---
 
-Generate migration models
-> alembic revision --autogenerate -m "init"
+### 🧩 Stack Summary
 
-Migrate models
-> alembic upgrade head
+| Component      | Tech Used                             |
+| -------------- | ------------------------------------- |
+| Backend API    | FastAPI                               |
+| Async Worker   | Celery + RabbitMQ (or Outbox Pattern) |
+| Storage        | PostgreSQL + SQLModel                 |
+| Vector DB      | Qdrant                                |
+| Message Broker | RabbitMQ                              |
+| Result Backend | Redis (for Celery)                    |
+| Embeddings     | (all-MiniLM-L6-v2,)                   |
+| Quiz Generator | LLM (phi3)                            |
 
+---
 
-Run Rabbit-mq docker
-```
-> docker run -d --hostname rabbit --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
-Then access the RabbitMQ dashboard:
-URL: http://localhost:15672
-User: guest
-Pass: guest
-```
-Run Redis
+### [Click here Setup Guide ](https://github.com/NishantGhanate/HeapMind/tree/main/documentation/setup.md)
 
-> docker run -d --name redis -p 6379:6379 redis:7-alpine
-
-Celery worker
-> celery -A app.core.celery_app worker --loglevel=info
-
-on windows
-> celery -A app.core.celery_app worker --loglevel=info --pool=solo
-
-
-Celery monitor via flower [pip install flower] [http://localhost:5555]
-> celery -A app.core.celery_app flower --broker=amqp://guest:guest@localhost:5672//
-
-Or use docker for flower
-
-> docker run -d -p 5555:5555 \
-    --name=flower \
-    -e CELERY_BROKER_URL=redis://host.docker.internal:6379/0 \
-    mher/flower
-
-Run duadradb
-
-Linux:
-> docker run -p 6333:6333 -p 6334:6334 -v $(pwd)/qdrant_storage:/qdrant/storage qdrant/qdrant
-
-Windows:
-> docker run -p 6333:6333 -p 6334:6334 -v D:\Github\FlashCards\qdrant_storage:/qdrant/storage qdrant/qdrant
-
-
-Link
-> http://localhost:6333/dashboard#/welcome
-
-
-
-
-TIPS:
-- Register your models into migrations/env.py
-- Import SQl model into script.py.mako
